@@ -1,7 +1,6 @@
 package com.Amaya.Imagenes.Modelo;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@Table(name = "Imagenes")
+@Table(name = "imagenes")
 @Entity(name = "Imagen")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,8 +23,8 @@ public class Imagen {
 
     private byte[] imagen;
 
-    public Imagen(@NotNull MultipartFile imagen) throws IOException {
+    public Imagen(MultipartFile multipartFile) throws IOException {
 
-        this.imagen = imagen.getBytes();
+        this.imagen = multipartFile.getBytes();
     }
 }

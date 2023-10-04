@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+            name="viewport"
+    />
+    <meta content="ie=edge" http-equiv="X-UA-Compatible" />
+    <title>Imagenes</title>
+</head>
+<body>
+
+<ul th:each = "imagen: ${images}">
+    <li><img th:src="${imagen}" style="width:300px" alt=""/></li>
+</ul>
+
+</body>
+</html>
