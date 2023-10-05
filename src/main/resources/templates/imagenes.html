@@ -11,9 +11,14 @@
 </head>
 <body>
 
-<ul th:each = "imagen: ${images}">
-    <li><img th:src="${imagen}" style="width:300px" alt=""/></li>
+
+
+
+<tbody th:with="count=0">
+<ul th:each = "imagen: ${imagenes}">
+    <li><img th:with="count=${count + 1}" th:src="${imagen}" /></li>
 </ul>
+</tbody>
 
 </body>
 </html>

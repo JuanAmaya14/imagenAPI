@@ -12,7 +12,7 @@
 <body>
 <h1 th:text = "'Imagen con el id: ' + ${id}" />
 
-<img th:src="@{${'/imagen/'+id}}"  />
+<img th:src="*{'data:image;base64,'+ imagen}"  />
 
 </body>
 </html>

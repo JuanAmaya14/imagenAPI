@@ -3,9 +3,7 @@ package com.Amaya.Imagenes.Controller;
 import com.Amaya.Imagenes.Modelo.Datos.DatosRespuestaImagen;
 import com.Amaya.Imagenes.Modelo.Imagen;
 import com.Amaya.Imagenes.Repository.ImagenRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,16 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -47,32 +40,49 @@ public class ImagenController {
         return ResponseEntity.created(uri).body(datosRespuestaImagen);
     }
 
-    @GetMapping("/MostrarImagen/{id}")
-    public void listarImagenPorId(@PathVariable long id, Model model,
-                                    HttpServletResponse response) throws IOException {
+    @GetMapping("/imagen/{id}")
+    public String listarImagenPorId(@PathVariable long id, Model model) throws IOException {
 
         Imagen imagen = imagenRepository.getReferenceById(id);
 
+        byte[] encode = Base64.getEncoder().encode(imagen.getImagen());
+
         model.addAttribute("id", imagen.getId());
 
-        response.setContentType("image/jpeg, image/jpg, image/png");
+        model.addAttribute("imagen", new String(encode, "UTF-8"));
 
-        var imagenSalida = response.getOutputStream();
-        imagenSalida.write(imagen.getImagen());
-        imagenSalida.flush();
-        imagenSalida.close();
-
-        model.addAttribute("imagen", imagenSalida);
-
+        return "MostrarImagen";
     }
 
-    @GetMapping("/")
-    public String listarImagenes(Model model){
+//    @GetMapping("/")
+//    public String listarImagenes(Model model) {
+//
+//        List<byte[]> imagenes = imagenRepository.getAllImagen();
+//
+//        model.addAttribute("imagenes", imagenes);
+//
+//        return "imagenes";
+//
+//    }
 
-        List<byte[]> imagen = imagenRepository.getAllImagen();
-        model.addAttribute("images", imagen);
+    @GetMapping("/")
+    public String listarImagenes(Model model) throws UnsupportedEncodingException {
+
+        List<Imagen> imagenes = imagenRepository.findAll();
+
+        byte[] encode = Base64.getEncoder().encode(imagenes.get().getImagen());
+
+        model.addAttribute("images", new String(encode, "UTF-8"));
 
         return "imagenes";
 
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    @Transactional
+    public ResponseEntity eliminarImagen(@PathVariable long id) {
+
+
+        return ResponseEntity.ok().body("");
     }
 }
