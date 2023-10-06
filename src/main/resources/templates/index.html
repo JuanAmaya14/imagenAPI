@@ -1,24 +1,16 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta
             content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
             name="viewport"
     />
-    <meta content="ie=edge" http-equiv="X-UA-Compatible" />
+    <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
     <title>Imagenes</title>
 </head>
 <body>
 
-
-
-
-<tbody th:with="count=0">
-<ul th:each = "imagen: ${imagenes}">
-    <li><img th:with="count=${count + 1}" th:src="${imagen}" /></li>
-</ul>
-</tbody>
-
+<h1 th:text="'Actualmente existen ' + ${cantidad} + ' imagenes en la bd'"/>
 </body>
 </html>

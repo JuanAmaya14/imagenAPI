@@ -13,10 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -26,7 +25,7 @@ public class ImagenController {
     private ImagenRepository imagenRepository;
 
 
-    @PostMapping
+    @PostMapping("/registrar")
     @Transactional
     public ResponseEntity registrarImagen(@RequestParam("file") MultipartFile multipartFile,
                                           UriComponentsBuilder uriComponentsBuilder) throws IOException {
@@ -40,7 +39,7 @@ public class ImagenController {
         return ResponseEntity.created(uri).body(datosRespuestaImagen);
     }
 
-    @GetMapping("/imagen/{id}")
+    @GetMapping("/{id}")
     public String listarImagenPorId(@PathVariable long id, Model model) throws IOException {
 
         Imagen imagen = imagenRepository.getReferenceById(id);
@@ -49,32 +48,19 @@ public class ImagenController {
 
         model.addAttribute("id", imagen.getId());
 
-        model.addAttribute("imagen", new String(encode, "UTF-8"));
+        model.addAttribute("imagen", new String(encode, StandardCharsets.UTF_8));
 
         return "MostrarImagen";
     }
 
-//    @GetMapping("/")
-//    public String listarImagenes(Model model) {
-//
-//        List<byte[]> imagenes = imagenRepository.getAllImagen();
-//
-//        model.addAttribute("imagenes", imagenes);
-//
-//        return "imagenes";
-//
-//    }
+    @GetMapping
+    public String listarCantidadImagenes(Model model) {
 
-    @GetMapping("/")
-    public String listarImagenes(Model model) throws UnsupportedEncodingException {
+        Long cantidadImagenes = imagenRepository.count();
 
-        List<Imagen> imagenes = imagenRepository.findAll();
+        model.addAttribute("cantidad", cantidadImagenes);
 
-        byte[] encode = Base64.getEncoder().encode(imagenes.get().getImagen());
-
-        model.addAttribute("images", new String(encode, "UTF-8"));
-
-        return "imagenes";
+        return "index";
 
     }
 
@@ -82,7 +68,10 @@ public class ImagenController {
     @Transactional
     public ResponseEntity eliminarImagen(@PathVariable long id) {
 
+        Imagen imagen = imagenRepository.getReferenceById(id);
 
-        return ResponseEntity.ok().body("");
+        imagenRepository.deleteById(id);
+
+        return ResponseEntity.ok().body("La imagen con el id: " + imagen.getId() + " a sido borrado");
     }
 }
