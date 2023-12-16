@@ -30,7 +30,7 @@ public class Imagen {
 
     public void actualizarImagen(MultipartFile multipartFile) throws IOException {
 
-        if (multipartFile != null){
+        if (multipartFile != null) {
 
             this.imagen = multipartFile.getBytes();
 

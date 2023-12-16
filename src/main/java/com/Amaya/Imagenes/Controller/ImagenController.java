@@ -1,13 +1,11 @@
 package com.Amaya.Imagenes.Controller;
 
-import com.Amaya.Imagenes.Modelo.Datos.DatosActualizarImagen;
 import com.Amaya.Imagenes.Modelo.Datos.DatosRespuestaImagen;
 import com.Amaya.Imagenes.Modelo.Imagen;
 import com.Amaya.Imagenes.Repository.ImagenRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -51,26 +49,26 @@ public class ImagenController {
     public ResponseEntity ActualizarTopico(@PathVariable long id, @RequestParam("file") MultipartFile multipartFile)
             throws IOException {
 
-            if (multipartFile.isEmpty()){
+        if (multipartFile.isEmpty()) {
 
-                return ResponseEntity.badRequest().body("No puede estar vacio");
+            return ResponseEntity.badRequest().body("No puede estar vacio");
 
-            } else {
+        } else {
 
-                Imagen imagen = imagenRepository.getReferenceById(id);
+            Imagen imagen = imagenRepository.getReferenceById(id);
 
-                imagen.actualizarImagen(multipartFile);
+            imagen.actualizarImagen(multipartFile);
 
-                DatosRespuestaImagen datosRespuestaImagen = new DatosRespuestaImagen(imagen.getId(), imagen.getImagen());
+            DatosRespuestaImagen datosRespuestaImagen = new DatosRespuestaImagen(imagen.getId(), imagen.getImagen());
 
-                return ResponseEntity.ok(datosRespuestaImagen);
+            return ResponseEntity.ok(datosRespuestaImagen);
 
-            }
+        }
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Lista imagen por id")
-    public String listarImagenPorId(@PathVariable long id, Model model){
+    public String listarImagenPorId(@PathVariable long id, Model model) {
 
         Imagen imagen = imagenRepository.getReferenceById(id);
 
