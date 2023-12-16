@@ -27,4 +27,14 @@ public class Imagen {
 
         this.imagen = multipartFile.getBytes();
     }
+
+    public void actualizarImagen(MultipartFile multipartFile) throws IOException {
+
+        if (multipartFile != null){
+
+            this.imagen = multipartFile.getBytes();
+
+        }
+
+    }
 }

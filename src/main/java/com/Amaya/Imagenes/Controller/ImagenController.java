@@ -1,9 +1,13 @@
 package com.Amaya.Imagenes.Controller;
 
+import com.Amaya.Imagenes.Modelo.Datos.DatosActualizarImagen;
 import com.Amaya.Imagenes.Modelo.Datos.DatosRespuestaImagen;
 import com.Amaya.Imagenes.Modelo.Imagen;
 import com.Amaya.Imagenes.Repository.ImagenRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,7 @@ import java.util.Base64;
 
 @Controller
 @RequestMapping("/")
+@Tag(name = "Imagen")
 public class ImagenController {
 
     @Autowired
@@ -27,6 +32,7 @@ public class ImagenController {
 
     @PostMapping("/registrar")
     @Transactional
+    @Operation(summary = "Registra una imagen")
     public ResponseEntity registrarImagen(@RequestParam("file") MultipartFile multipartFile,
                                           UriComponentsBuilder uriComponentsBuilder) throws IOException {
 
@@ -39,8 +45,32 @@ public class ImagenController {
         return ResponseEntity.created(uri).body(datosRespuestaImagen);
     }
 
+    @PutMapping("/modificar/{id}")
+    @Transactional
+    @Operation(summary = "Modifica una imagen")
+    public ResponseEntity ActualizarTopico(@PathVariable long id, @RequestParam("file") MultipartFile multipartFile)
+            throws IOException {
+
+            if (multipartFile.isEmpty()){
+
+                return ResponseEntity.badRequest().body("No puede estar vacio");
+
+            } else {
+
+                Imagen imagen = imagenRepository.getReferenceById(id);
+
+                imagen.actualizarImagen(multipartFile);
+
+                DatosRespuestaImagen datosRespuestaImagen = new DatosRespuestaImagen(imagen.getId(), imagen.getImagen());
+
+                return ResponseEntity.ok(datosRespuestaImagen);
+
+            }
+    }
+
     @GetMapping("/{id}")
-    public String listarImagenPorId(@PathVariable long id, Model model) throws IOException {
+    @Operation(summary = "Lista imagen por id")
+    public String listarImagenPorId(@PathVariable long id, Model model){
 
         Imagen imagen = imagenRepository.getReferenceById(id);
 
@@ -54,6 +84,7 @@ public class ImagenController {
     }
 
     @GetMapping
+    @Operation(summary = "Muestra la cantidad de imagenes")
     public String listarCantidadImagenes(Model model) {
 
         Long cantidadImagenes = imagenRepository.count();
@@ -66,6 +97,7 @@ public class ImagenController {
 
     @DeleteMapping("/eliminar/{id}")
     @Transactional
+    @Operation(summary = "Elimina una imagen")
     public ResponseEntity eliminarImagen(@PathVariable long id) {
 
         Imagen imagen = imagenRepository.getReferenceById(id);
